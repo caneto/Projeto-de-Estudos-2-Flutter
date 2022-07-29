@@ -9,33 +9,56 @@ class TudoListaPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Center(
-            child: Row(
+          child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: const TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Adicione uma tarefa",
-                  hintText: "Ex: Digitar dados",
+            Row(
+              children: [
+                const Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Adicione uma tarefa",
+                      hintText: "Ex: Digitar dados",
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(
+                  width: 8,
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xff00d7f3),
+                    padding: EdgeInsets.all(14),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                )
+              ],
             ),
-            SizedBox(
-              width: 8,
+            SizedBox(height: 16,),
+            Row(
+            children: [
+              const Expanded(
+                child:
+                  Text(
+                    "Você não tem tarefas",
+                  ),
+              ),
+              ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xff00d7f3),
+                    padding: EdgeInsets.all(14),
+                  ),
+                  child: Text("Limpar tudo"),
+              )],
             ),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xff00d7f3),
-                padding: EdgeInsets.all(14)
-              ),
-              child: Icon(
-                Icons.add,
-                size: 30,
-              ),
-            )
-          ],
-        )),
+          ]),
+        )
       ),
     );
   }
