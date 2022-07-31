@@ -18,6 +18,19 @@ class _TodoListaPageState extends State<TodoListaPage> {
   Todo? deletedTodo;
   int? deletedTodoPos;
 
+  String? errorText;
+
+  @override
+  void initState() {
+    super.initState();
+
+    todoRepository.getTodoList().then((value) {
+      setState(() {
+        todos = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,10 +44,20 @@ class _TodoListaPageState extends State<TodoListaPage> {
                     Expanded(
                       child: TextField(
                         controller: todoController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Adicione uma tarefa",
                           hintText: "Ex: Digitar dados",
+                          errorText: errorText,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff00d7f3),
+                              width: 2,
+                            )
+                          ),
+                          labelStyle: TextStyle(
+                            color: Color(0xff00d7f3),
+                          )
                         ),
                       ),
                     ),
@@ -44,12 +67,21 @@ class _TodoListaPageState extends State<TodoListaPage> {
                     ElevatedButton(
                       onPressed: () {
                         String text = todoController.text;
+
+                        if(text.isEmpty) {
+                          setState(() {
+                            errorText = "O titulo não pode ser vazio?";
+                          });
+                          return;
+                        }
+
                         setState(() {
                           Todo newTodo = Todo(
                             title: text,
                             dateTime: DateTime.now(),
                           );
                           todos.add(newTodo);
+                          errorText = null;
                         });
                         todoController.clear();
                         todoRepository.saveTodosList(todos);
@@ -110,6 +142,7 @@ class _TodoListaPageState extends State<TodoListaPage> {
     setState(() {
       todos.remove(todo);
     });
+    todoRepository.saveTodosList(todos);
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -126,6 +159,7 @@ class _TodoListaPageState extends State<TodoListaPage> {
             setState(() {
               todos.insert(deletedTodoPos!, deletedTodo!);
             });
+            todoRepository.saveTodosList(todos);
           },
         ),
         duration: const Duration(seconds: 5),
@@ -164,5 +198,6 @@ class _TodoListaPageState extends State<TodoListaPage> {
     setState(() {
       todos.clear();
     });
+    todoRepository.saveTodosList(todos);
   }
 }
